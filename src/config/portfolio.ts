@@ -1,3 +1,24 @@
+export type PortfolioProject = {
+  title: string;
+  summary: string;
+  challenge: string;
+  solution: string;
+  stack: string[];
+  impact: string;
+  links: {
+    github: string;
+    caseStudy: string;
+    demo: string;
+  };
+};
+
+export type PortfolioExperience = {
+  period: string;
+  role: string;
+  focus: string;
+  highlights: string[];
+};
+
 export const personalInfo = {
   name: "Pratik Mehkarkar",
   title: "Android • AI • Cloud Engineer",
@@ -31,7 +52,7 @@ export const techStack = [
   }
 ];
 
-export const projects = [
+export const projects: PortfolioProject[] = [
   {
     title: "VIN Scanner",
     summary:
@@ -119,7 +140,7 @@ export const projects = [
   }
 ];
 
-export const experience = [
+export const experience: PortfolioExperience[] = [
   {
     period: "Current",
     role: "Android Developer",

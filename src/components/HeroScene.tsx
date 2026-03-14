@@ -1,28 +1,38 @@
 "use client";
 
-import { Float, OrbitControls, Sphere } from "@react-three/drei";
+import { useMemo } from "react";
 import { Canvas } from "@react-three/fiber";
+import { Sphere } from "@react-three/drei";
+import { useGravityMode } from "@/components/GravityContext";
 
-function Orb({ position, color }: { position: [number, number, number]; color: string }) {
+function CalmOrb({ gravityMode }: { gravityMode: boolean }) {
+  const emissiveIntensity = gravityMode ? 0.45 : 0.25;
+
   return (
-    <Float speed={1.8} rotationIntensity={0.8} floatIntensity={1.2}>
-      <Sphere args={[0.45, 32, 32]} position={position}>
-        <meshStandardMaterial color={color} emissive={color} emissiveIntensity={0.35} roughness={0.1} />
+    <group rotation={[0.4, 0.3, 0]}>
+      <Sphere args={[0.95, 20, 20]}>
+        <meshStandardMaterial color="#6ee7ff" emissive="#5b7cfa" emissiveIntensity={emissiveIntensity} roughness={0.25} />
       </Sphere>
-    </Float>
+    </group>
   );
 }
 
 export function HeroScene() {
+  const { gravityMode } = useGravityMode();
+  const sceneClass = useMemo(
+    () =>
+      `h-[300px] w-full overflow-hidden rounded-3xl border border-white/10 bg-panel/70 shadow-glow md:h-[360px] ${
+        gravityMode ? "animate-[pulse_5s_ease-in-out_infinite]" : ""
+      }`,
+    [gravityMode]
+  );
+
   return (
-    <div className="h-[340px] w-full overflow-hidden rounded-3xl border border-white/10 bg-panel/70 shadow-glow md:h-[420px]">
-      <Canvas camera={{ position: [0, 0, 4.5], fov: 45 }}>
-        <ambientLight intensity={0.8} />
-        <pointLight position={[4, 4, 4]} intensity={80} />
-        <Orb position={[-1.4, 0.5, 0]} color="#6ee7ff" />
-        <Orb position={[1.2, -0.6, -0.5]} color="#9f7aea" />
-        <Orb position={[0, 1.2, -0.8]} color="#5b7cfa" />
-        <OrbitControls enableZoom={false} autoRotate autoRotateSpeed={1.4} enablePan={false} />
+    <div className={sceneClass}>
+      <Canvas dpr={[1, 1.5]} camera={{ position: [0, 0, 3.2], fov: 40 }} gl={{ antialias: false, powerPreference: "low-power" }}>
+        <ambientLight intensity={0.65} />
+        <directionalLight position={[1.5, 2, 2]} intensity={2.5} />
+        <CalmOrb gravityMode={gravityMode} />
       </Canvas>
     </div>
   );
