@@ -1,22 +1,9 @@
 "use client";
 
 import { motion } from "framer-motion";
+import type { PortfolioProject } from "@/config/portfolio";
 
-type Project = {
-  title: string;
-  summary: string;
-  challenge: string;
-  solution: string;
-  stack: string[];
-  impact: string;
-  links: {
-    github: string;
-    caseStudy: string;
-    demo: string;
-  };
-};
-
-export function ProjectCard({ project, index }: { project: Project; index: number }) {
+export function ProjectCard({ project, index }: { project: PortfolioProject; index: number }) {
   return (
     <motion.article
       initial={{ opacity: 0, y: 20 }}

@@ -4,16 +4,27 @@ import dynamic from "next/dynamic";
 import { motion } from "framer-motion";
 import { GravityProvider } from "@/components/GravityContext";
 import { GravityToggle } from "@/components/GravityToggle";
+import { LazyRender } from "@/components/LazyRender";
 import { MagneticButton } from "@/components/MagneticButton";
-import { ProjectCard } from "@/components/ProjectCard";
 import { ScrollProgress } from "@/components/ScrollProgress";
 import { Section } from "@/components/Section";
-import { TechOrbit } from "@/components/TechOrbit";
 import { experience, exploring, personalInfo, projects, techStack } from "@/config/portfolio";
 
 const HeroScene = dynamic(() => import("@/components/HeroScene").then((mod) => mod.HeroScene), {
   ssr: false,
-  loading: () => <div className="h-[340px] w-full animate-pulse rounded-3xl border border-white/10 bg-panel/70 md:h-[420px]" />
+  loading: () => <div className="h-[300px] w-full animate-pulse rounded-3xl border border-white/10 bg-panel/70 md:h-[360px]" />
+});
+
+const TechOrbit = dynamic(() => import("@/components/TechOrbit").then((mod) => mod.TechOrbit), {
+  loading: () => <div className="h-56 animate-pulse rounded-2xl border border-white/10 bg-panel/70" />
+});
+
+const ProjectsSection = dynamic(() => import("@/components/ProjectsSection").then((mod) => mod.ProjectsSection), {
+  loading: () => <div className="h-72 animate-pulse rounded-2xl border border-white/10 bg-panel/70" />
+});
+
+const ExperienceSection = dynamic(() => import("@/components/ExperienceSection").then((mod) => mod.ExperienceSection), {
+  loading: () => <div className="h-64 animate-pulse rounded-2xl border border-white/10 bg-panel/70" />
 });
 
 export default function Home() {
@@ -56,40 +67,21 @@ export default function Home() {
         </Section>
 
         <Section id="stack" title="Tech Stack" subtitle="Core technologies grouped by product impact areas.">
-          <TechOrbit groups={techStack} />
+          <LazyRender minHeight={320}>
+            <TechOrbit groups={techStack} />
+          </LazyRender>
         </Section>
 
         <Section id="projects" title="Featured Projects" subtitle="Selected work across mobile, AI, and cloud integrations.">
-          <div className="grid gap-6 lg:grid-cols-2">
-            {projects.map((project, index) => (
-              <ProjectCard key={project.title} project={project} index={index} />
-            ))}
-          </div>
+          <LazyRender minHeight={520}>
+            <ProjectsSection projects={projects} />
+          </LazyRender>
         </Section>
 
         <Section id="experience" title="Experience / Journey" subtitle="Production delivery, enterprise context, and continuous cross-stack growth.">
-          <div className="space-y-6">
-            {experience.map((item) => (
-              <motion.article
-                key={item.role}
-                initial={{ opacity: 0, x: -30 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true, amount: 0.2 }}
-                className="rounded-2xl border border-white/10 bg-white/[0.03] p-6"
-              >
-                <div className="flex flex-col justify-between gap-3 md:flex-row md:items-center">
-                  <h3 className="text-xl font-semibold text-white">{item.role}</h3>
-                  <span className="text-sm uppercase tracking-[0.18em] text-accent">{item.period}</span>
-                </div>
-                <p className="mt-3 text-slate-300">{item.focus}</p>
-                <ul className="mt-4 list-disc space-y-2 pl-5 text-sm text-slate-300">
-                  {item.highlights.map((highlight) => (
-                    <li key={highlight}>{highlight}</li>
-                  ))}
-                </ul>
-              </motion.article>
-            ))}
-          </div>
+          <LazyRender minHeight={420}>
+            <ExperienceSection experience={experience} />
+          </LazyRender>
         </Section>
 
         <Section id="exploring" title="What I’m Building / Exploring">
